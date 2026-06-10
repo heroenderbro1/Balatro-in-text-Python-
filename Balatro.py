@@ -12,7 +12,7 @@ shopjokerprice=[]
 class Globals:
     RemainingDeck=["2♥","3♥","4♥","5♥","6♥","7♥","8♥","9♥","10♥","J♥","Q♥","K♥","A♥","2♦","3♦","4♦","5♦","6♦","7♦","8♦","9♦","10♦","J♦","Q♦","K♦","A♦","2♣","3♣","4♣","5♣","6♣","7♣","8♣","9♣","10♣","J♣","Q♣","K♣","A♣","2♠","3♠","4♠","5♠","6♠","7♠","8♠","9♠","10♠","J♠","Q♠","K♠","A♠"]
     deck=["2♥","3♥","4♥","5♥","6♥","7♥","8♥","9♥","10♥","J♥","Q♥","K♥","A♥","2♦","3♦","4♦","5♦","6♦","7♦","8♦","9♦","10♦","J♦","Q♦","K♦","A♦","2♣","3♣","4♣","5♣","6♣","7♣","8♣","9♣","10♣","J♣","Q♣","K♣","A♣","2♠","3♠","4♠","5♠","6♠","7♠","8♠","9♠","10♠","J♠","Q♠","K♠","A♠"]
-    NumOrder=["2♥","2♦","2♣","2♠","3♥","3♦","3♣","3♠","4♥","4♦","4♣","4♠","5♥","5♦","5♣","5♠","6♥","6♦","6♣","6♠","7♥","7♦","7♣","7♠","8♥","8♦","8♣","8♠","9♥","9♦","9♣","9♠","10♥","10♦","10♣","10♠","J♥","J♦","J♣","J♠","Q♥","Q♦","Q♣","Q♠","K♥","K♦","K♣","K♠","A♥","A♦","A♣","A♠"]
+    NumOrder=[]
     SuitOrder=[]
     hand=[]
     JokerInv=[]
@@ -183,7 +183,8 @@ def death():
     epic=input("Just restart as death is a W.I.P!")
     while True:
         if epic=="!(7423890fkjl":
-            print("ok")       
+            print("ok")
+#playing the hand function
 def Play(CardsUsing,HandNums):
     CardNums=[]
     CardSuits=[]
@@ -223,16 +224,19 @@ def Play(CardsUsing,HandNums):
     HCard=True
     #print(hand)
     #check what hand it is
+    sortedR=[]
+    for i in range(len(CardValues)):
+        sortedR.append(sorted(CardValues)[i])
     rankcounts=Counter(CardNums).values()
-    print(rankcounts)
+    #print(rankcounts)
     #print("DEBUG LEN RANKCOUNTS",len(rankcounts))
     #print("DEBUG LEN CARDUSE",len(CardsUsing))
     if len(CardsUsing)==5:
-        print("LEN IS 5???")
+        #print("LEN IS 5???")
         if CardSuits[0]==CardSuits[1]==CardSuits[2]==CardSuits[3]==CardSuits[4]:
             Flush=True
             HCard=False
-        if CardValues[0]==CardValues[1]-1 and CardValues[1]==CardValues[2]-1 and CardValues[2]==CardValues[3]-1 and CardValues[3]==CardValues[4]-1 or sorted(CardValues)==[2,3,4,5,14]:
+        if sortedR[0]==sortedR[1]-1 and sortedR[1]==sortedR[2]-1 and sortedR[2]==sortedR[3]-1 and sortedR[3]==sortedR[4]-1 or sortedR==[2,3,4,5,14]:
             Straight=True
             HCard=False
         if Straight==True and Flush==True:
@@ -269,7 +273,7 @@ def Play(CardsUsing,HandNums):
             print("High Card")
             handtype="HCard"
     elif len(CardsUsing)==4:
-        print("LEN IS 4???")
+        #print("LEN IS 4???")
         if sorted(rankcounts)==[2,2]:
             print("Two Pair")
             handtype="2Pair"
@@ -286,7 +290,7 @@ def Play(CardsUsing,HandNums):
             print("High Card")
             handtype="HCard"                
     elif len(CardsUsing)==3:
-        print("LEN IS 3???")
+        #print("LEN IS 3???")
         if sorted(rankcounts)==[3]:
             print("Three of a Kind")
             handtype="3Kind"
@@ -297,7 +301,7 @@ def Play(CardsUsing,HandNums):
             print("High Card")
             handtype="HCard"
     elif len(CardsUsing)==2:
-        print("LEN IS 2???")
+        #print("LEN IS 2???")
         if sorted(rankcounts)==[2]:
             print("Pair")
             handtype="Pair"
@@ -305,19 +309,20 @@ def Play(CardsUsing,HandNums):
             print("High Card")
             handtype="HCard"
     else:
-        print("LEN IS 1???")
+        #print("LEN IS 1???")
         print("High Card")
         handtype="HCard"
     highest=[0]
-    print("DEBUG HANDTYPE",handtype)
-    print("DEBUG HIGHEST",highest)
+    #print("DEBUG HANDTYPE",handtype)
+    #print("DEBUG HIGHEST",highest)
     #make sure only hands in handtype are scored in ScoredHand()
     if handtype!="HCard" and handtype!="Flush" and handtype!="Straight" and handtype!="SFlush":
         ScoredHand(CardValues)
+        ScoredHandUse(CardSuits,CardNums)
     elif handtype=="HCard":
         #make high card work so only one card is scored
         for i in range(len(CardNums)):
-            print("High Card Scoring")
+            #print("High Card Scoring")
             if CardValues[i]>highest[0]:
                 highest.remove(highest[0])
                 highest.append(CardValues[i])
@@ -325,7 +330,7 @@ def Play(CardsUsing,HandNums):
         CardValues.append(highest[0])
         #print(highest)
         #print("Debug",CardValues)         
-    Scoring(CardValues,handtype)
+    Scoring(CardValues,handtype,CardNums,CardSuits)
     #print("Work after score?")
     for i in range(len(CardsUsing)):
         DiscardPile.append(CardsUsing[i])
@@ -347,8 +352,9 @@ def Play(CardsUsing,HandNums):
         for i in range(len(CardsUsing)):
             draw()
     NumSort(HandNums)
+#use the function below so we know what cards are/are not scoring
 def ScoredHand(CardValues):
-    print("Scored hand()")
+    #print("Scored hand()")
     ScoredCards=[]
     CardDupes=[]
     for i in CardValues:
@@ -356,12 +362,42 @@ def ScoredHand(CardValues):
             CardDupes.append(i)
         else:
             ScoredCards.append(i)
-    print("DEBUG CARDDUPES",CardDupes)
-    print("DEBUG SCOREDCARDS",ScoredCards)
+    #print("DEBUG CARDDUPES",CardDupes)
+    #print("DEBUG SCOREDCARDS",ScoredCards)
     for i in range(len(ScoredCards)):
         if ScoredCards[i] not in CardDupes:
             CardValues.remove(ScoredCards[i])
     #print("DEbug",CardValues)
+#use the below function o extract nums and suist being used in raw external form
+def ScoredHandUse(CardSuits,CardNums):
+    ScoredCards=[]
+    CardDupes=[]
+    for i in range(len(CardNums)):
+        #print(CardNums[i])
+        if len(CardNums[i])==1:
+            if CardNums[i] in ScoredCards:
+                CardDupes.append(CardNums[i])
+            else:
+                ScoredCards.append(CardNums[i])
+        else:
+            if CardNums[i] in ScoredCards:
+                CardDupes.append(CardNums[i])
+            else:
+                ScoredCards.append(CardNums[i])
+    #print("DEBUG CARDDUPES USING",CardDupes)
+    #print("DEBUG SCOREDCARDS USING",ScoredCards)
+    #print("DEbug",CardValues)
+    #print(CardNums)
+    for i in range(len(CardNums)):
+        #print(i)
+        if CardNums[i-1] not in CardDupes:
+            CardNums.remove(CardNums[i-1])
+            CardSuits.remove(CardSuits[i-1])
+            #print("HELLO")
+        #else:
+            #print("WHAT")
+    #print(CardNums,CardSuits)
+#discard function
 def Discard(CardsUsing,HandNums):
     Globals.discards-=1
     print(Globals.discards,"Discard(s) Left")
@@ -396,15 +432,44 @@ def Discard(CardsUsing,HandNums):
    # print(Globals.hand)
    # print(DiscardPile)
     NumSort(HandNums)
+#end of hand joker scoring like jimbo
 def EndOfHandScore():
     for i in range(len(Globals.JokerInv)):
-        if "Joker" in Globals.JokerInv[i]:
+        if Globals.JokerInv[i]=="Joker":
             Globals.mult+=4
-            print("+4 mult (joker)")
+            print("+4 mult (Joker)")
             time.sleep(0.5)
             print(Globals.chips,"X",Globals.mult)
             time.sleep(0.5)
-def Scoring(CardValues,handtype):
+def JokerHandScore(CardNums,CardSuits,cardnum):
+    for i in range(len(Globals.JokerInv)):
+        if "Lusty Joker" in Globals.JokerInv[i] and CardSuits[cardnum-1]=="♥":
+            Globals.mult+=3
+            print("+3 mult (Lusty Joker)")
+            time.sleep(0.5)
+            print(Globals.chips,"X",Globals.mult)
+            time.sleep(0.5)
+        elif "Gluttonous Joker" in Globals.JokerInv[i] and CardSuits[cardnum-1]=="♣":
+            Globals.mult+=3
+            print("+3 mult (Gluttonous Joker)")
+            time.sleep(0.5)
+            print(Globals.chips,"X",Globals.mult)
+            time.sleep(0.5)
+        elif "Wrathful Joker" in Globals.JokerInv[i] and CardSuits[cardnum-1]=="♠":
+            Globals.mult+=3
+            print("+3 mult (Wrathful Joker)")
+            time.sleep(0.5)
+            print(Globals.chips,"X",Globals.mult)
+            time.sleep(0.5)
+        elif "Greedy Joker" in Globals.JokerInv[i] and CardSuits[cardnum-1]=="♦":
+            Globals.mult+=3
+            print("+3 mult (Greedy Joker)")
+            time.sleep(0.5)
+            print(Globals.chips,"X",Globals.mult)
+            time.sleep(0.5)
+            
+#main poker hand scoring
+def Scoring(CardValues,handtype,CardNums,CardSuits):
     if handtype=="SFlush":
         Globals.chips=100
         Globals.mult=8
@@ -434,28 +499,31 @@ def Scoring(CardValues,handtype):
         Globals.mult=1
     print(Globals.chips,"X",Globals.mult)
     time.sleep(0.5)
-    print("DEBUG CARDVALUES",CardValues)
+    #print("DEBUG CARDVALUES",CardValues)
+    cardnum=0
     for i in range(len(CardValues)):
         if CardValues[i]<11:
-            print("Chips +",CardValues[i])
+            print("Chips +",CardValues[i]," ("+str(CardNums[i])+str(CardSuits[i])+")")
             time.sleep(0.5)
             Globals.chips+=CardValues[i]
         elif 10<CardValues[i]<14:
-            print("Chips + 10")
+            print("Chips + 10 ("+str(CardNums[i])+str(CardSuits[i])+")")
             time.sleep(0.5)
             Globals.chips+=10
         else:
-            print("Chips + 11")
+            print("Chips + 11 ("+str(CardNums[i])+str(CardSuits[i])+")")
             time.sleep(0.5)
             Globals.chips+=11
         print(Globals.chips,"X",Globals.mult)
         time.sleep(0.5)
+        cardnum+=1
+        JokerHandScore(CardNums,CardSuits,cardnum)
     EndOfHandScore()
     Globals.score+=Globals.mult*Globals.chips
     if Globals.score<Globals.ReqScoreValue:
         print("Your score now is "+str(Globals.score)+" out of "+str(Globals.ReqScoreValue))
     else:
-        print("You beat the round.")
+        print("You beat the round. You scored " +str(Globals.score)+" and needed "+str(Globals.ReqScoreValue)+str("."))
         if Globals.Round % 3==0:
             Globals.ante+=1
         Globals.Round+=1
@@ -470,6 +538,7 @@ def Scoring(CardValues,handtype):
         Globals.hands=4
         Globals.discards=99
         shop()
+#shop...
 def shop():
     print("$"+str(Globals.money))
     DiscardPile=[]
@@ -490,30 +559,61 @@ def shop():
             shopjokerprice.append(2)
         else:
             shopjokerprice.append(4)
-        print(str(i+1)+". "+shopjokers[i]+" $"+str(shopjokerprice[i]))
     #print(shopjokerprice)
     print("Wait i must make shop first")
     while True:
-        choice=input("What do you want to do?\nBUY JOKER\nBUY PACK\nBUY VOUCHER\nREROLL\nLEAVE\n").lower()
+        for i in range(len(shopjokers)):
+            print(str(i+1)+". "+shopjokers[i]+" $"+str(shopjokerprice[i]))
+        choice=input("What do you want to do?\nBUY JOKER\nBUY PACK(WIP)\nBUY VOUCHER(WIP)\nREROLL\nLEAVE\n").lower()
         if choice=="leave":
+            for i in range(len(shopjokers)):
+                Cjokers.append(shopjokers[0])
+                shopjokers.remove(shopjokers[0])
+                shopjokerprice.remove(shopjokerprice[0])
+                print(Cjokers)
             game()
             break
         elif choice=="buy joker":
-            shopchoice=input("Which Joker are you buying?")
-            if shopchoice.isdigit()==False:
-                print("This is not an option")
-            elif shopchoice=="1":
-                if Globals.money>=shopjokerprice[0]:
-                    Globals.JokerInv.append(shopjokers[0])
-            elif shopchoice=="2":
-                if Globals.money>=shopjokerprice[1]:
-                    Globals.JokerInv.append(shopjokers[1])
-            print(Globals.JokerInv)
+            if len(shopjokers)>0:
+                while True:
+                    shopchoice=input("Which Joker are you buying?")
+                    if shopchoice.isdigit()==False:
+                        print("This is not an option")
+                    elif len(shopjokers)==2 and (shopchoice=="1" or shopchoice=="2"):
+                        if Globals.money>=shopjokerprice[int(shopchoice)-1]:
+                            Globals.JokerInv.append(shopjokers[int(shopchoice)-1])
+                            shopjokers.remove(shopjokers[int(shopchoice)-1])
+                            shopjokerprice.remove(shopjokerprice[int(shopchoice)-1])
+                            break
+                    elif len(shopjokers)==1 and shopchoice=="1":
+                        if Globals.money>=shopjokerprice[int(shopchoice)-1]:
+                            Globals.JokerInv.append(shopjokers[int(shopchoice)-1])
+                            shopjokers.remove(shopjokers[int(shopchoice)-1])
+                            shopjokerprice.remove(shopjokerprice[int(shopchoice)-1])
+                            break
+            else:
+                print("There are no jokers left to buy!")
+        elif choice=="reroll":
+            print("Rerolling the shop...")
+            time.sleep(0.5)
+            for i in range(len(shopjokers)):
+                Cjokers.append(shopjokers[0])
+                shopjokers.remove(shopjokers[0])
+                shopjokerprice.remove(shopjokerprice[0])
+            for i in range(2):
+                shopitemJ=(random.choice(Cjokers))
+                shopjokers.append(shopitemJ)
+                Cjokers.remove(shopitemJ)
+            for i in range(2):
+                if shopjokers[i]=="Joker":
+                    shopjokerprice.append(2)
+                else:
+                    shopjokerprice.append(4)
 game()
 #Globals.money=100
 #shop()
 #to do:
-#oh no now I need to code the jokers excl. jimbo, made him now
-#restock joker when shop is reloaded
+#oh no now I need to code the jokers excl. jimbo, made him now + suit jimbos
+#make card display when score increase is shown (CURRENTLY WIP - card modifications, ignore until these exist)
 #boss blinds + skip tags
 #idk other stuff ig
